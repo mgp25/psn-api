@@ -1,8 +1,6 @@
 import simplejson
 import json
 import requests
-import os
-import ssl
 from src.User import User
 
 class Friend:

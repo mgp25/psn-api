@@ -1,8 +1,7 @@
 from src.Auth import Auth
 from src.Friend import Friend
 from src.User import User
-
-
+from src.Messaging import Messaging
 
 auth = Auth('YOUR EMAIL', 'YOUR PASSWORD')
 tokens = auth.get_tokens()
