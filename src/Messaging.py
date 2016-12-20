@@ -224,3 +224,13 @@ class Messaging:
             response = requests.post(self.MESSAGE_THREADS_URL +  '/' + group_id + '/messages', headers=header, data=message).text
 
         return response
+
+    def get_messages(self, group_id):
+        header = {
+            'Authorization': 'Bearer ' + self.oauth
+        }
+        url = self.MESSAGE_THREADS_URL + '/' + group_id + '?count=200&fields=threadMembers,threadNameDetail,threadThumbnailDetail,threadProperty,latestTakedownEventDetail,newArrivalEventDetail,threadEvents'
+        response = requests.get(url, headers=header)
+        data = json.loads(response.text)
+
+        return data
