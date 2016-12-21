@@ -223,7 +223,7 @@ class Messaging:
             message += "--gc0p4Jq0M2Yt08jU534c0p--\n\n"
             response = requests.post(self.MESSAGE_THREADS_URL +  '/' + group_id + '/messages', headers=header, data=message).text
 
-        return response
+        return json.loads(response)
 
     def get_messages(self, group_id):
         header = {
