@@ -1,5 +1,5 @@
 # PSN API
-<img src=http://vignette1.wikia.nocookie.net/logopedia/images/7/7e/PlayStation_Network.png/revision/latest?cb=20110901131500" height="50">
+<img src="http://vignette1.wikia.nocookie.net/logopedia/images/7/7e/PlayStation_Network.png/revision/latest?cb=20110901131500" height="50">
 
 This is a python wrapper for the PSN API.
 
