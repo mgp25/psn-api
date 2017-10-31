@@ -118,6 +118,29 @@ class Auth:
             return False
 
         return True
+    
+    def GrabNewTokens(refreshToken):
+        refresh_oauth_request = {
+            "app_context": "inapp_ios",
+            "client_id": "b7cbf451-6bb6-4a5a-8913-71e61f462787",
+            "client_secret": "zsISsjmCx85zgCJg",
+            "refresh_token": None,
+            "duid": "0000000d000400808F4B3AA3301B4945B2E3636E38C0DDFC",
+            "grant_type": "refresh_token",
+            "scope": "capone:report_submission,psn:sceapp,user:account.get,user:account.settings.privacy.get,user:account.settings.privacy.update,user:account.realName.get,user:account.realName.update,kamaji:get_account_hash,kamaji:ugc:distributor,oauth:manage_device_usercodes"
+        }
+
+        refresh_oauth_request['refresh_token'] = refreshToken
+
+        data = urllib.parse.urlencode(refresh_oauth_request).encode('utf-8')
+        request = urllib.request.Request('https://auth.api.sonyentertainmentnetwork.com/2.0/oauth/token', data = data)
+        response = urllib.request.urlopen(request)
+        data = json.loads(response.read().decode('utf-8'))
+
+        if hasattr(data, 'error'):
+            return False
+
+        return [data['access_token'], data['refresh_token']]
 
     def GrabOAuth(self):
         self.oauth_request['code'] = self.grant_code
