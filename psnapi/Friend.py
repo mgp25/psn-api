@@ -1,7 +1,7 @@
 import simplejson
 import json
 import requests
-from src.User import User
+from psnapi.User import User
 
 class Friend:
 

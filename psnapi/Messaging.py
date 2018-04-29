@@ -1,8 +1,11 @@
 import simplejson
 import json
 import requests
+import random
+from hyper import HTTP20Connection
+import logging
 import os.path
-from src.User import User
+from psnapi.User import User
 
 class Messaging:
 
@@ -75,11 +78,58 @@ class Messaging:
 
         response = requests.put(url, headers=header, data=payload)
 
-    def send_message(self, psn_ids, message_text = "", attachment = "", message_type = 1, audio_length = ""):
+    def send_message(self, thread_id, message_text = "", attachment = "", message_type = 1, audio_length = ""):
+
+        boundary = "---------------------------"+str(random.sample(range(10000, 99999), 1)[0])
         header = {
+            'origin': 'https://my.playstation.com',
             'Authorization': 'Bearer ' + self.oauth,
-            'Content-Type': 'multipart/form-data; boundary="gc0p4Jq0M2Yt08jU534c0p"',
+            'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:59.0) Gecko/20100101 Firefox/59.0',
+            'Content-Type': 'multipart/mixed; boundary='+boundary,
+            'accept-encoding': 'gzip, deflate, br',
+            'accept': '*/*',
+            'dnt': '1',
+
         }
+
+        headers_auth = {
+            'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:59.0) Gecko/20100101 Firefox/59.0',
+            'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+            'accept-language': 'es-ES,es;q=0.8,en-US;q=0.5,en;q=0.3',
+            'accept-encoding': 'gzip, deflate, br',
+            'access-control-request-method': 'POST',
+            'access-control-request-headers': 'authorization,content-type',
+            'origin': 'https://my.playstation.com',
+            'dnt': '1'
+        }
+
+        message_body = {
+            "message": {
+                "messageKind": 1,
+                "body": message_text
+            }
+        }
+
+        message = "\r\n"
+        message += boundary+"\r\n"
+        message += "Content-Type: application/json; charset=utf-8\r\n"
+        message += "Content-Description: message\r\n"
+        message += "\r\n"
+        message += json.dumps(message_body) + "\r\n"
+        message += boundary + "--\r\n"
+
+
+        conn = HTTP20Connection("es-gmsg.np.community.playstation.net:443")
+        auth = conn.request('OPTIONS', "/groupMessaging/v1/messageGroups/"+thread_id+"/messages", headers=headers_auth)
+        auth_response = conn.get_response(auth)
+        request = conn.request('POST', "/groupMessaging/v1/messageGroups/"+thread_id+"/messages", headers=header, body=message)
+        response = conn.get_response(request)
+        print(response.read())
+
+        return response
+
+
+        '''
         users_body = {
             "threadDetail": {
                 "threadMembers": {}
@@ -157,9 +207,12 @@ class Messaging:
 
             message += "--gc0p4Jq0M2Yt08jU534c0p--\n\n"
 
-        response = requests.post(self.MESSAGE_THREADS_URL, headers=header, data=message).text
-
-        return response
+        s = requests.Session()
+        s.mount(self.SEND_MESSAGE_URL+thread_id+"/messages", HTTP20Adapter())
+        response = requests.Request('POST', self.SEND_MESSAGE_URL+thread_id+"/messages", headers=header, data=message)
+        request = response.prepare()
+        self.pretty_print_POST(request)
+        '''
 
     def send_group_message(self, group_id, message_text = "", attachment = "", message_type = 1, audio_length = ""):
         header = {

@@ -80,18 +80,18 @@ class Auth:
             request = urllib.request.Request(self.SSO_URL, data = data)
             response = urllib.request.urlopen(request)
             data = json.loads(response.read().decode('utf-8'))
-            if hasattr(data, 'error'):
-                return False
-            if hasattr(data, 'ticket_uuid'):
-                error = {
-                            'error': '2fa_code_required',
-                            'error_description': '2FA Code Required',
-                            'ticket': data['ticket_uuid']
-                }
-                self.last_error = json.dumps(error)
-                return False
-            self.npsso = data['npsso']
-            return True
+        if hasattr(data, 'error'):
+            return False
+        if hasattr(data, 'ticket_uuid'):
+            error = {
+                        'error': '2fa_code_required',
+                        'error_description': '2FA Code Required',
+                        'ticket': data['ticket_uuid']
+            }
+            self.last_error = json.dumps(error)
+            return False
+        self.npsso = data['npsso']
+        return True
 
     def find_between(self, s, first, last ):
         try:
@@ -118,7 +118,7 @@ class Auth:
             return False
 
         return True
-    
+
     def GrabNewTokens(refreshToken):
         refresh_oauth_request = {
             "app_context": "inapp_ios",
