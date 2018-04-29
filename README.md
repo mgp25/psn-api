@@ -11,10 +11,10 @@ This is a python wrapper for the PSN API.
 
 ## How to get refresh token
 
-Sony now is using reCaptcha. There is no way to do this authentication via the Script at this time. So we have worked around the authentication issue by doing the following.
+Sony is using reCaptcha now. There is no way to do this authentication via the Script at this time. So we have worked around the authentication issue by doing the following.
 
 1. From the PSN Website or App or Console Enable 2 Step Verification
-2. Go to [https://auth.api.sonyentertainmentnetwork.com/login.jsp](https://auth.api.sonyentertainmentnetwork.com/login.jsp) Enter your credentials, Solve the reCaptcha, and when you get the `ENTER Verification Code` screen take a look at the URL in your browser. Collect the following ID: `ticket_uuid=b7aeb485-xxxx-4ec2-zzzz-0f23bcee5bc5&layout_type=......` **DO NOT ENTER THE VERIFICATION CODE**
+2. Go to [https://www.bungie.net/en/User/SignIn/Psnid?code=000000](https://www.bungie.net/en/User/SignIn/Psnid?code=000000) Enter your credentials, Solve the reCaptcha, and when you get the `ENTER Verification Code` screen take a look at the URL in your browser. Collect the following ID: `ticket_uuid=b7aeb485-xxxx-4ec2-zzzz-0f23bcee5bc5&layout_type=......` **DO NOT ENTER THE VERIFICATION CODE**
 3. From the API
 
 ```python
@@ -44,11 +44,13 @@ friend = Friend(tokens)
 friend_list = friend.my_friends()
 ```
 
+**Note:** Check [obtain_tokens.py](https://github.com/mgp25/psn-api/blob/master/obtain_tokens.py)
+
 ## Features
 - Login to PSN
 - Get user information
 - View and manage your friends list
-- Manage and send messages through PSN
+- Manage and send messages through PSN (This feature does not work at the moment).
 
 ## TODO
 - View trophies and trophies for a specific game
